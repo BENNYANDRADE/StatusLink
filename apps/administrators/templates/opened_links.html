@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %} 
+
+{% block content %}
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="text-center m-t-lg">
+				<h1>
+					Links abiertos 
+				</h1>
+			   
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<div class="ibox-tools">
+						<a href="{% url  "administrators:link_generator" %}" class="btn btn-primary btn-sm">Nuevo <i class="fa fa-plus"></i></a>
+						
+					</div>
+				</div>
+				<div class="ibox-content">
+					
+					<table class="table table-striped table-responsive">
+						<thead>
+							<tr>
+								<th>Nombre del link</th>
+								<th>Ver</th>
+								<th>Eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for link in opened_links %}
+								<tr>
+									<td>{{link.link_name}}</td>
+									<td class="text-center">
+										<div class="btn-group">
+											
+											<a data-toggle="modal" class="btn-default btn btn-sm"  onclick="getLink({{link.pk}})">Link rápido</a>
+											<a class="btn-success btn btn-sm" href="{% url "administrators:detail" link.pk %}" >Ver etapas</a>
+
+											{% comment %} <button class="btn btn-white" type="button">Left</button> {% endcomment %}
+											{% comment %} <button class="btn btn-primary" type="button">Middle</button> {% endcomment %}
+											{% comment %} <button class="btn btn-white" type="button">Right</button> {% endcomment %}
+										</div>
+			
+									</td>
+									<td class="text-center">
+										<form method="post" enctype="multipart/form-data" action="{% url 'administrators:delete_link' link.pk %}" >
+											{% csrf_token %}
+											
+											<button class="btn-danger btn btn-sm" type="submit">Eliminar</button>								
+										</form> 
+									</td>
+								</tr>
+							{% endfor %}
+							
+						</tbody>						
+					</table>
+				</div>
+			</div>					
+		</div>
+	</div>
+
+	<div id="modal-form" class="modal fade in" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r">
+							<h3 class="m-t-none m-b text-center">¡Status Link generado correctamente!</h3>
+	
+							<div class="text-center">
+								{% comment %} <a class=""></a> {% endcomment %}
+	
+								<a id="generated_link" type="button" class="btn btn-block btn-outline btn-default"></a>
+								
+							</div>
+							<br>
+							<div class="text-center">
+								<a onclick = "copyToClipBoard()" type="button" class="btn btn-block  btn-default">Copiar al portapapeles</a>
+								
+							</div>
+							<br>
+							<div class="text-center">
+								<a type="button" class="btn btn-block btn-outline btn-success">Código QR</a>
+	
+							</div>
+	
+							<hr>
+	
+							<div class="text-center">
+								<a type="button" class="btn btn-block btn-outline btn-primary">WHATSAPP</a>
+	
+							</div>
+	
+							<br>
+							<div class="text-center">
+								{% comment %} <a type="button" class="btn btn-block btn-outline btn-info">Generar otro link</a> {% endcomment %}
+								<a href="{% url  "administrators:link_generator" %}" class="btn btn-block btn-outline btn-info">Generar otro link</a>
+
+							</div>
+	
+							<br>
+							<div class="text-center">
+								<a type="button" class="btn btn-block btn-outline btn-default">Ver links</a>
+	
+							</div>
+	
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endblock content %} 
+	{% block javascript %}
+	<script>
+	
+			
+			
+		   
+			async function getLink(pk){
+				const LINK_URL = '/link/get-link/';
+
+
+				//https://statuslink.onrender.com/link/final-link/11
+
+				//console.log('pk',pk)
+				//let homework = getHomework(HOMEWORK_URL,homework_pk);
+				
+				const res = await fetch(LINK_URL+pk);
+				const data = await res.json();
+				console.log('obtener link',data)
+				let el = document.getElementById('generated_link')
+				el.innerHTML = `https://statuslink.onrender.com/link/final-link/${data[0]['pk']}`
+				el.href = `https://statuslink.onrender.com/link/final-link/${data[0]['pk']}`
+
+				//el.innerHTML = `http://localhost:8000/link/final-link/${data[0]['pk']}`
+				//el.href = `http://localhost:8000/link/final-link/${data[0]['pk']}`
+				
+			   $('#modal-form').modal('show');
+			   
+			}
+			async function copyToClipBoard(){
+				
+				var content = document.getElementById('generated_link').innerHTML;
+	
+				navigator.clipboard.writeText(content)
+					.then(() => {
+						alert("¡Copiado!");
+				})
+			
+				
+				
+			}
+			{% if link %}
+				console.log('jeje existe')
+				getLink({{link}})
+				//$('#modal-form').modal('show');
+			{% endif %}
+	</script>
+	{% endblock %}

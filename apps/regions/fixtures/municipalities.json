@@ -1,0 +1,9 @@
+[
+    {
+        "model":"regions.Municipalities",
+        "pk":1,
+        "fields":{
+            "name":"Distrito Central"
+        }
+    }
+]

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-5">
+		<div class="jumbotron">
+			{% comment %} <h1>Pasos</h1> {% endcomment %}
+			<h2>Primer paso</h2>
+			<p>Ingrese el nombre y seleccione el tipo de link que utilizará, seguido de la fecha de expiración.</p>
+			<hr>
+			{% comment %} <h2>Detalles</h2>
+			<p>Ingrese el nombre y seleccione el tipo de link que utilizará, seguido de la fecha de expiración.</p> {% endcomment %}
+		</div>
+	</div>
+	<div class="col-lg-7">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5>Descripción <small>Ingresa los datos principales de tu link</small></h5>
+			</div>
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12 b-r">
+						{% comment %} <h3 class="m-t-none m-b">Sign in</h3> {% endcomment %}
+						{% comment %} <p>Sign in today for more expirience.</p> {% endcomment %}
+						<form role="form" method="post">
+							{% csrf_token %}
+							<div class="form-group">
+								<label>Nombre del link</label> 
+								<input name="link_name" type="text" placeholder="" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label>Tipo de link</label> 
+								{% comment %} <input type="email" placeholder="Enter email" class="form-control"> {% endcomment %}
+								<div class="i-checks"><label> <input type="radio" value="option1" name="a" required> <i></i> Nuevo </label></div>
+								<div class="i-checks"><label> <input type="radio" value="option1" name="a"> <i></i> Registrado </label></div>
+
+							</div>
+							<hr>
+							<div class="form-group">
+								<div class="i-checks"><label> <input type="checkbox" value="option1" name="a"> <i></i> Este link tiene fecha de expiración </label></div>
+
+							</div>
+							<div>
+								<button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+									<strong>Siguiente paso</strong>
+								</button>
+								{% comment %} <a  href="{% url "administrators:link_generator_final_step" %}" class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+									<strong>Siguiente paso</strong>
+								</a> {% endcomment %}
+								
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+	$("#example").steps({
+		headerTag: "h1",
+		bodyTag: "section",
+		transitionEffect: "slideLeft",
+		autoFocus: true
+	});
+</script>
+{% endblock %}

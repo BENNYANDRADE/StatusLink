@@ -1,0 +1,9 @@
+[
+    {
+        "model":"regions.Departments",
+        "pk":1,
+        "fields":{
+            "name":"Francisco Morazán"
+        }
+    }
+]

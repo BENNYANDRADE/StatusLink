@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-6">
+		<div class="jumbotron">
+			<h2>Instrucciones</h2>
+
+			<p>Seleccione el <b>estado</b> en el que se encuentra la etapa.<p>
+			
+				<p>Seleccione el <b>tiempo</b> necesaria para completar la etapa.</p>
+			<hr>
+		</div>
+	</div>
+	<div class="col-lg-6">
+
+
+		{% for step in steps %}
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12 b-r text-center">
+						<h1>{{step.step_name}}</h1>
+						{% if step.step_name == "Etapa 13" %}
+							test
+						{% endif %}
+						<form role="form" method="post">
+							{% csrf_token %}
+							{% comment %} <input name="step" type="hidden" class="form-control" value = {{step.pk}} > 
+							<input name="process_status" type="hidden" class="form-control" value = {{step.process_status}} >
+							 {% endcomment %}
+							
+							
+							<button onclick = "statusChangeView('{{step.pk}}','Assigned')" type="button" class="btn btn-w-m {% if step.process_status.description == 'Assigned' %} btn-primary {% endif%} btn-block process{{step.pk}}">Asignado</button>
+
+							<button onclick = "statusChangeView('{{step.pk}}','InProcess')" type="button" class="btn btn-w-m {% if step.process_status.description == 'InProcess' %} btn-primary {% endif%} btn-block process{{step.pk}}">En Proceso</button>
+							<button onclick = "statusChangeView('{{step.pk}}','Finished')" type="button" class="btn btn-w-m {% if step.process_status.description == 'Finished' %} btn-primary {% endif%} btn-block process{{step.pk}}">Finalizado</button>
+
+							<hr>
+							<label>Seleccionar tiempo</label>
+							<div class="form-group">
+								<input onclick = "changeTime('{{step.pk}}',this)" type="radio" name="radio{{step.pk}}" id="radio1" value="date">
+									<label for="radio1">
+										Por fecha
+									</label>
+
+								<input onclick = "changeTime('{{step.pk}}',this)" type="radio" name="radio{{step.pk}}" id="radio2" value="hour">
+								<label for="radio2">
+									Por hora
+								</label>
+							</div>
+							
+
+							<div class="form-group" id="calendar{{step.pk}}" style = "display:none;">
+								<div class="input-group date">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" class="form-control" id="calendarInput{{step.pk}}" value= "{{step.calendar_date|date:"Y-m-d" }}">
+								</div>
+								<br>
+								<div class="col-lg-12">
+									<button onclick = "setDate({{step.pk}});" class="btn btn-sm btn-white" type="button">Guardar fecha</button>
+								</div>
+							</div>
+							<div class="form-group" id="clock{{step.pk}}" style="display:none;">
+								
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									<input type="number" class="form-control" id="hourInput{{step.pk}}" value = "{{step.hours}}">
+								</div>
+								<br>
+								<div class="col-lg-12">
+									<button onclick = "setHour({{step.pk}});" class="btn btn-sm btn-white" type="button">Guardar hora</button>
+									<br>
+									<span >Actualizar el tiempo</span>
+									<br>
+									
+									<div id="setHour_{{step.pk}}">
+										{% for x in buttons %}
+											{% if x.id == step.pk %}
+												{% for y in x.range %}
+													<button id="{{step.pk}}_{{y}}" onclick = "saveColor('{{step.link_info}}',{{step.pk}},'{{step.pk}}_{{y}}')" class="btn btn-sm btn-success" type="button">O</button>
+												{% endfor %}
+											{% endif %}
+										{% endfor %}
+									</div>
+								</div>											
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}   
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Comentarios y adjuntos
+			</div>
+			<div class="panel-body">
+				<p>{{link_info.comments}}</p>
+				<hr>
+				<p> 
+
+					{% if link_info.attachment %}
+						<a href="{{link_info.attachment.url}}" class="badge badge-primary">Descargar Adjunto</a> 
+					{% else %} 
+						<span class="badge bg-gradient-light">
+							No existe adjunto 
+						</span> 
+					{% endif %} 
+				</p>
+
+			</div>
+
+		</div>
+	   
+	</div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
+
+<script>
+	async function statusChangeView(step_pk,status){
+		const LINK_URL = `/link/status-change/${step_pk}/${status}`;
+		console.log('LINK URL',LINK_URL)
+		
+		fetch(LINK_URL, {
+			method: 'POST',
+			headers:{
+				'Accept': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+				'X-CSRFToken': "{{csrf_token}}",
+			},
+			//body: JSON.stringify(client_data)
+		  })
+		  .then(response => response.json())
+		  .then(data => {
+			console.log('Success:', data);
+			
+			
+
+			location.reload();
+		  })
+		  .catch(error => {
+			console.log('error')
+		  });
+		
+	   
+	}
+	function getColor(){
+		
+		console.log('color ser')
+
+
+	}
+	function saveColor(linkinfo,pk,thisel){
+		let boxId = window.localStorage.getItem('boxId');
+
+		boxId = JSON.parse(boxId);
+		let el = document.getElementById(boxId);
+		
+		el.setAttribute('class','btn btn-sm btn-primary')
+		if (boxId != null) {
+			let element = document.getElementById(boxId);
+			element.setAttribute('class','btn btn-sm btn-success')
+		}
+		/*let boxId = window.localStorage.getItem('boxId');
+		boxId=JSON.parse(boxId)
+
+		if (boxId != null) {
+			let element = document.getElementById(boxId);
+			element.setAttribute('class','btn btn-sm btn-success')
+		}
+		
+
+		let el = document.getElementById(`${thisel}`);
+
+
+		window.localStorage.setItem('boxId',[{linkinfo:""}])
+
+		getColor();*/
+
+
+
+			//getColor();
+			
+		let obj={
+			'linkinfo':`${linkinfo}`,
+			'linkasignado':`${thisel}`
+		}
+		
+		window.localStorage.setItem("boxId",JSON.stringify(obj))
+		//window.localStorage.setItem("boxId",`${obj}`)
+	
+		
+		
+		
+		
+	}
+
+
+
+	$(document).ready(function(){
+
+		$('.input-group.date').datepicker({
+			format: 'yyyy-mm-dd',
+			todayBtn: "linked",
+			keyboardNavigation: false,
+			forceParse: false,
+			calendarWeeks: true,
+			autoclose: true,
+		   
+		});
+
+		$('.clockpicker').clockpicker();
+	});
+	function  changeTime(step_pk,element){
+		console.log(element.value);
+		
+		if(element.value == "date"){
+			document.getElementById(`clock${step_pk}`).style.display="none";
+			document.getElementById(`calendar${step_pk}`).style.display="";
+		}else{
+			document.getElementById(`clock${step_pk}`).style.display="";
+			document.getElementById(`calendar${step_pk}`).style.display="none";
+
+		}
+
+	}
+	function todayDate(){
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		var yyyy = today.getFullYear();
+
+		today = yyyy + '-' + mm + '-' + dd;
+		return today
+	}
+	async function setDate(step){
+		
+		let calendarValue = document.getElementById(`calendarInput${step}`).value;
+		var calendarValueJS = new Date(calendarValue);
+		var todayDateJS = new Date(todayDate());
+		
+		if( calendarValueJS < todayDateJS ){
+			alert('¡La fecha no puede ser menor a la de hoy!')
+			return false;
+		}else if( calendarValueJS == todayDateJS){
+			return true;
+		}
+		
+		const LINK_URL = `/link/set-date/${step}`;
+		
+		fetch(LINK_URL, {
+			method: 'POST',
+			headers:{
+				'Accept': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+				'X-CSRFToken': "{{csrf_token}}",
+			},
+			body: JSON.stringify({'calendarValue':calendarValue})
+		  })
+		  .then(response => response.json())
+		  .then(data => {
+			
+			alert('Fecha guardada correctamente');
+		  })
+		  .catch(error => {
+			console.log('error')
+			//alert('Ha ocurrido un error');
+		  });
+	}
+
+
+	async function setHour(step){
+
+		let hourValue = parseInt(document.getElementById(`hourInput${step}`).value);
+		
+		if( hourValue > 24 ){
+			alert('¡Las horas no pueden exceder más de 24 horas!')
+			return false;
+		}
+		
+		if( isNaN(hourValue) ){
+			alert('¡debe colocar una hora!')
+			return false;
+		}
+		
+		const LINK_URL = `/link/set-hour/${step}`;
+		varib = ``
+		console.log(LINK_URL)
+				
+		fetch(LINK_URL, {
+			method: 'POST',
+			headers:{
+				'Accept': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+				'X-CSRFToken': "{{csrf_token}}",
+			},
+			body: JSON.stringify({'hourValue':hourValue})
+		  })
+		  .then(response => response.json())
+		  .then(data => {
+				alert('¡Hora guardada correctamente!');
+		  })
+		  .catch(error => {
+			console.log('error');
+		});
+
+	}
+
+	getColor();
+		
+</script>
+{% endblock %}

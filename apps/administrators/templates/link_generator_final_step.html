@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-5">
+		<div class="jumbotron">
+			{% comment %} <h1>Pasos</h1> {% endcomment %}
+			<h2>Segundo paso</h2>
+			<p>
+				Ingrese cada una de las etapas que serán vistas por la persona que recibirá el link. Adicione una nueva etapa dando clic en signo <b>“+”</b> , y elimine una etapa con el signo <b>"-"</b>.			{% comment %} <p>Ingrese el nombre y seleccione el tipo de link que utilizará, seguido de la fecha de expiración.</p> {% endcomment %}
+			<hr>
+			{% comment %} <h2>Detalles</h2>
+			<p>Ingrese el nombre y seleccione el tipo de link que utilizará, seguido de la fecha de expiración.</p> {% endcomment %}
+		</div>
+	</div>
+	<div class="col-lg-7">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5 id= "link_info_name">{{link_info.link_name}}</h5>
+			</div>
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-sm-12 b-r">
+						<form role="form" method="post" enctype="multipart/form-data" >
+							{% csrf_token %}
+							<div class="input-group" style="display:none" id = "step" step="1" >
+								<input name="steps" type="text" class="form-control previewStepsclass" verify="omitir"> 
+								
+								<span class="input-group-btn"> 
+									<button id="test" onclick="remove(this)" type="button" class="btn btn-secondary" >
+										-
+									</button> 
+								</span>
+							</div>
+
+							<div class="input-group">
+								<input name="steps" type="text" class="form-control previewStepsclass" placeholder="Escriba el nombre de la etapa" > 
+								<span class="input-group-btn"> 
+									<button onclick="add()" type="button" class="btn btn-primary">
+										+
+									</button> 
+								</span>
+							</div>
+							<div id="container">
+								
+							</div>
+							<hr>
+							<div class="text-center">
+								<label>Ingresa un comentario</label> 
+
+								<textarea  name="comments" placeholder ="" class = "form-control" rows="4" ></textarea>
+
+							</div>
+							<br>
+							<br>
+							
+							<div class=" text-center">
+								<label>Sube archivos</label> 
+
+								<input name="file" type="file"/>
+
+							</div>
+							<div class="container">
+							</div>
+							<hr>
+
+							
+								
+								
+
+							<div class="form-group">
+								
+									<input name ="cancel" type="hidden" value = {{link_info.pk}} >
+								
+
+									<a class="btn btn-default" onclick = "preview()">Vista previa</a>
+									<a class="btn btn-danger" data-toggle="modal" onclick = "cancel({{link_info.pk}})">Cancelar</a>
+
+									<button  class="btn btn-primary" type="submit">
+										<strong>Crear link</strong>
+									</button>
+								
+							</div>								
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="preview" class="modal fade in" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="jumbotron">
+							<h2>Instrucciones</h2>
+							<p>Aquí puedes ver tu proceso</p>
+							<hr>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<h2><b id="link_name"><b></h2>
+
+						
+						<div id = "previewContainer">
+
+						</div>
+						
+						  
+						
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								Comentarios y adjuntos
+							</div>
+							<div class="panel-body">
+								<p>{{link_info.comments}}</p>
+								<hr>
+								<p> 
+				
+									{% if link_info.attachment %}
+										<a href="{{link_info.attachment.url}}" class="badge badge-primary">Descargar Adjunto</a> 
+									{% else %} 
+										<span class="badge bg-gradient-light">
+											No existe adjunto 
+										</span> 
+									{% endif %} 
+								</p>
+				
+							</div>
+				
+						</div>
+					   
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+			  </div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+	$("#example").steps({
+		headerTag: "h1",
+		bodyTag: "section",
+		transitionEffect: "slideLeft",
+		autoFocus: true
+	});
+	function add(){
+		console.log('acabo de clonar');
+
+		const node = document.getElementById("step");
+		
+		const clone = node.cloneNode(true);
+		clone.style.display=""
+		let step = parseInt(clone.getAttribute("step")) + 1
+		clone.placeholder = `Etapa ${step}`
+
+
+		document.getElementById("container").appendChild(clone);
+	}
+
+	function remove(data){
+		console.log(data.parentElement.parentElement.remove())
+	}
+
+	function cancel(pk){
+		let confirmar = confirm('¿esta seguro que desea cancelar el proceso?')
+
+		if (confirmar == true){
+			console.log('cancelar')
+			location.href = `/cancel/${pk}`
+		}	
+	}
+
+	function preview(){
+		let link_name = document.getElementById('link_info_name').innerHTML
+		document.getElementById('link_name').innerHTML=link_name
+		let previewStepsclass = document.getElementsByClassName('previewStepsclass')	
+		//previewStepsclass[0].remove()
+		
+		var test_data="";
+		//console.log('verificar',previewStepsclass)
+
+		//for (const index of previewStepsclass.keys()) {
+		//	console.log(index);
+		//  }
+
+
+		for (let i = 0; i < previewStepsclass.length; i++) {
+			if(i===0){
+				console.log('no hacer nada')
+			}
+			else{
+			
+				test_data += `<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-sm-12 b-r text-center">
+								<h2>${previewStepsclass[i].value}</h2>
+								<button class="btn btn-default btn-block">Asignado</button>
+								<button class="btn btn-default btn-block">En proceso</button>
+								<button class="btn btn-default btn-block">Finalizado</button>
+								
+							</div>
+						</div>
+					</div>
+				</div>`
+				document.getElementById('previewContainer').innerHTML = test_data
+				
+			}
+		}
+		$('#preview').modal('show');
+	}
+</script>
+{% endblock %}

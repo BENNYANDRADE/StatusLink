@@ -1,0 +1,35 @@
+{% if messages %}
+    
+	{% for message in messages %}	
+		{% comment %} <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header border-0">
+					<i class="ni ni-fat-remove text-danger me-2"></i>
+					<span class="me-auto text-gradient text-danger font-weight-bold">Error!</span>
+					<small class="text-body">{{message}}</small>
+					<i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+				</div>
+				<hr class="horizontal dark m-0">
+				<div class="toast-body" id="messageToast">
+					
+				</div>
+			</div>        
+		</div>      
+		 {% endcomment %}
+		<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast" aria-atomic="true">
+				<div class="toast-header border-0">
+				<i class="ni ni-check-bold text-{{message.extra_tags}} me-2"></i>
+				<span class="me-auto font-weight-bold">{{message}}</span>
+				<i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+				</div>
+				<hr class="horizontal dark m-0">
+				{% comment %} <div class="toast-body">
+				
+				</div> {% endcomment %}
+			</div>
+		</div>
+
+
+	{% endfor %}
+{% endif %}

@@ -1,0 +1,28 @@
+# Django
+Django==3.2.6
+django-extensions==3.1.5
+django-debug-toolbar==3.2.2
+django-simple-history==3.0.0
+six==1.16.0
+
+# Environment
+django-environ
+
+# Passwords security
+argon2-cffi
+
+# Static files
+whitenoise
+
+#password hasher
+#gunicorn
+gunicorn==20.1.0
+
+# Image Lib
+pillow
+
+# Database URL
+dj-database-url==0.5.0
+psycopg2-binary==2.9.3
+pycparser==2.21
+python-decouple==3.6
