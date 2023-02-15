@@ -41,7 +41,8 @@ ALLOWED_HOSTS = [
 	# "apiinstance.onrender.com",
 	# "statuslink.onrender.com",
 	# "statuslink.onrender.com",
-	"statuslink.onrender.com",
+    "statuslink-ft4r.onrender.com"
+	# "statuslink.onrender.com",
 	"localhost",
 	"0.0.0.0",
 	"127.0.0.1",
