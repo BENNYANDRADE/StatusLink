@@ -130,7 +130,7 @@
 
 
 				//https://statuslink.onrender.com/link/final-link/11
-
+                //https://statuslink-ft4r.onrender.com/
 				//console.log('pk',pk)
 				//let homework = getHomework(HOMEWORK_URL,homework_pk);
 				
@@ -138,8 +138,8 @@
 				const data = await res.json();
 				console.log('obtener link',data)
 				let el = document.getElementById('generated_link')
-				el.innerHTML = `https://statuslink.onrender.com/link/final-link/${data[0]['pk']}`
-				el.href = `https://statuslink.onrender.com/link/final-link/${data[0]['pk']}`
+				el.innerHTML = `https://statuslink-ft4r.onrender.com/link/final-link/${data[0]['pk']}`
+				el.href = `https://statuslink-ft4r.onrender.com/link/final-link/${data[0]['pk']}`
 
 				//el.innerHTML = `http://localhost:8000/link/final-link/${data[0]['pk']}`
 				//el.href = `http://localhost:8000/link/final-link/${data[0]['pk']}`
