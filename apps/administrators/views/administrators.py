@@ -22,6 +22,11 @@ from ..models import LinkInfo,ProcessSteps,ProcessStatus
 class AdminHomeView(TemplateView):
 	def get(self, request, **kwargs):     
 		return render(request, 'admin_home.html')
+	
+
+class ConfigurationView(TemplateView):
+	def get(self, request, **kwargs):     
+		return render(request, 'configuration.html')
 
 
 class LinkGeneratorView(CreateView):
