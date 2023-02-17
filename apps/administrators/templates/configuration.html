@@ -37,7 +37,16 @@
 										<label>Subir Logo</label> 
 		
 										<input name="logo" type="file">
-		
+
+										
+										{% if company_info.logo %}
+											<div class="text-center">
+												<img  src="{{company_info.logo.url}}" width="150"/>
+
+											</div>
+										{% endif %}
+										
+										
 									</div>
 									<br>
 									<br>
