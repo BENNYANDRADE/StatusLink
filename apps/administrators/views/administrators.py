@@ -17,16 +17,42 @@ from datetime import datetime,timezone
 from datetime import timedelta
 
 
-from ..models import LinkInfo,ProcessSteps,ProcessStatus
+from ..models import LinkInfo,ProcessSteps,ProcessStatus,Company
 
 class AdminHomeView(TemplateView):
 	def get(self, request, **kwargs):     
-		return render(request, 'admin_home.html')
+		context= {}
+		company_info=Company.objects.last()
+		context['company_info'] = company_info
+		
+		return render(request, 'admin_home.html',context)
 	
 
 class ConfigurationView(TemplateView):
 	def get(self, request, **kwargs):     
-		return render(request, 'configuration.html')
+		context= {}
+		company_info=Company.objects.last()
+		context['company_info'] = company_info
+		return render(request, 'configuration.html',context)
+
+
+	def post(self, request, **kwargs):	
+		# pk=self.kwargs.get('pk', None)
+		company_name = request.POST.get('company_name',None)
+		logo = request.FILES.get('logo',None)
+
+		
+		company = Company()
+		company.company_name = company_name
+		company.logo = logo
+		company.save()
+
+		print('verificar entra a post')
+		return HttpResponseRedirect(self.get_success_url())
+
+	def get_success_url(self):
+		return reverse('administrators:configuration_view')
+	
 
 
 class LinkGeneratorView(CreateView):
@@ -205,7 +231,7 @@ class FinalLinkView(View):
 		context={}
 		pk=self.kwargs.get('pk', None)
 
-		
+		company=Company.objects.last()
 		processes = ProcessSteps.objects.filter(link_info=pk).order_by('pk')
 			
 		print('verificar pk',pk)
@@ -262,6 +288,7 @@ class FinalLinkView(View):
 		context['link_info'] = link_info
 		context['progress_bar'] = progress_bar
 		context['elapsed_time'] = elapsed_time
+		context['company_info'] = company
 		return render(request, 'final_link.html',context)
 
 

@@ -2,6 +2,9 @@
 def file_path(instance, filename):
 	return 'files/{1}'.format(instance, filename)
 
+def logo_path(instance, filename):
+	return 'logo/{1}'.format(instance, filename)
+
 
 def teacher_homework_directory_path(instance, filename):
 		# file will be uploaded to MEDIA_ROOT / user_<id>/<filename>

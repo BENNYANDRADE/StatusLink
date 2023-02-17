@@ -3,7 +3,7 @@
 # Django
 from django.db import models
 from django.contrib import admin
-from  apps.utils.directory_path import file_path
+from  apps.utils.directory_path import file_path,logo_path
 
 
 class LinkInfo(models.Model):
@@ -55,6 +55,19 @@ class ProcessSteps(models.Model):
 	def __str__(self):
 		"""Return event department name."""
 		return self.step_name
+	
+
+class Company(models.Model):
+	id = models.AutoField(db_column='IdCompany', primary_key=True)
+	company_name = models.TextField(db_column='CompanyName')
+	logo = models.FileField(db_column='Logo', upload_to = logo_path, blank=True, null=True)
+
+	class Meta:
+		db_table = 'Company'
+	
+	def __str__(self):
+		"""Return event department name."""
+		return self.company_name
 
 
 admin.site.register(LinkInfo)

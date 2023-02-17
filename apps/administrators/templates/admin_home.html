@@ -9,7 +9,13 @@
             <h1>
                 Bienvenido a Status Link
             </h1>
-            {% comment %} <img src="{% static 'img/504.png' %}" alt="Girl in a jacket" width="200"> {% endcomment %}
+
+            <h2>
+                <b>{{company_info.company_name}}</b>
+            </h2>
+           
+            <img src="{{company_info.logo.url}}" width="300"/>
+
         </div>
     </div>
 </div>
