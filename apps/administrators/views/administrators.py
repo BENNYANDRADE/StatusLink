@@ -48,10 +48,7 @@ class ConfigurationView(TemplateView):
 		company.save()
 
 		print('verificar entra a post')
-		return HttpResponseRedirect(self.get_success_url())
-
-	def get_success_url(self):
-		return reverse('administrators:configuration_view')
+		return HttpResponseRedirect(self.request.path_info)
 	
 
 
