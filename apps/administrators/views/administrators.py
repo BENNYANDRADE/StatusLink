@@ -123,11 +123,12 @@ class LinkDetailView(View):
 
 		processes = ProcessSteps.objects.filter(link_info=pk).order_by('pk')
 		link_info=LinkInfo.objects.get(pk=pk)
+		
 
 		buttons = []
 		for x in processes:
-			print()
 			buttons.append({'id':x.id,'range':range(1,int((x.hours*60)/30+1))})
+			# print('verificar esto',x.hours)
 
 		context['steps'] = processes
 		context['link_info'] = link_info
@@ -146,22 +147,7 @@ class LinkDetailView(View):
 			process_steps.is_done=True
 		else:
 			process_steps.is_done=False
-		process_steps.save()
-
-		# last_link = LinkInfo.objects.last()
-		# last_link.comment = comment
-		# last_link.save()
-		
-		# steps = request.POST.getlist('steps',None)
-		
-		# for step in steps:
-		# 	if step == "":
-		# 		print('vacio')
-		# 	else:
-		# 		process_steps = ProcessSteps()
-		# 		process_steps.step_name = step
-		# 		process_steps.link_info = last_link
-		# 		process_steps.save()		
+		process_steps.save()		
 		return HttpResponseRedirect(self.request.path_info)
 
 		# return HttpResponseRedirect(self.get_success_url())
@@ -336,7 +322,7 @@ class SetDateView(View):
 		
 		process_steps = ProcessSteps.objects.get(pk=pk)
 		process_steps.calendar_date = calendar_value
-		process_steps.hours = None
+		process_steps.hours = 0
 		process_steps.save()
 		
 		return JsonResponse({'status':'ok'}, status = 200,safe=False)
