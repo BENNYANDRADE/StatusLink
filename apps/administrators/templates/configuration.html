@@ -17,7 +17,7 @@
 						<div class="row">
 							<div class="col-sm-12 b-r">
 								<form role="form" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="csrfmiddlewaretoken" value="E1LDYulTuTuLV3vZrlGCYa267AkGnTL68dSWGEoWu2E5ppml1spwyyaQc9HGvzpO">
+									{% csrf_token %}
 									<div class="input-group" style="display:none" id="step" step="1">
 										<input name="steps" type="text" class="form-control previewStepsclass" verify="omitir"> 
 										

@@ -128,7 +128,6 @@ class LinkDetailView(View):
 		buttons = []
 		for x in processes:
 			buttons.append({'id':x.id,'range':range(1,int((x.hours*60)/30+1))})
-			# print('verificar esto',x.hours)
 
 		context['steps'] = processes
 		context['link_info'] = link_info
