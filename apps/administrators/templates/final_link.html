@@ -67,39 +67,49 @@
 									{% endif %}
 
 									{% if step.process_status.description == 'InProcess' %}
-                                        {% if not step.calendar_date == None %}
-                                            Fecha de finalización: {{step.calendar_date}}
-                                            <div class="progress progress-striped active">
+
+                                        {% for x in progress_bar %}
+                                            {% if not step.calendar_date == None %}
+                                                Fecha de finalización: {{step.calendar_date}}
+                                                <br>
+                                                {% if x.id == step.pk %}
+                                                    {% if x.percentage <= 100 %}
+                                                        Progreso: {{x.percentage}}%
+                                                    {% else %}
+                                                        Progreso: 100%
+                                                    {% endif %}
+                                                    <div class="progress progress-striped active">
+                                                        
+                                                        <div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
+                                                            <span class="sr-only">40% Complete (success)</span>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+
                                                 
-                                                <div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
-                                                    <span class="sr-only">40% Complete (success)</span>
+                                                {% comment %} {% if x.id == step.pk %}
+                                                    {% if x.percentage <= 100 %}
+                                                        Progreso: {{x.percentage}}%
+                                                    {% else %}
+                                                        Progreso: 100%
+                                                    {% endif %}
+                                                    
+                                                <br>
+                                                <br>
+                                                <div class="progress progress-striped active">
+                                                    <div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
+                                                        <span class="sr-only">40% Complete (success)</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        {% endif %}
+                                                {% endif %} {% endcomment %}
+
+                                            {% endfor %} 
+                                        
 
                                         
 
-										{% comment %} {% for x in progress_bar %}
-                                            
-											<br>
-											{% if x.id == step.pk %}
-												{% if x.percentage <= 100 %}
-													Progreso: {{x.percentage}}%
-												{% else %}
-													Progreso: 100%
-												{% endif %}
-												
-											<br>
-											<br>
-											<div class="progress progress-striped active">
-                                                
-												<div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
-													<span class="sr-only">40% Complete (success)</span>
-												</div>
-											</div>
-											{% endif %} 
-
-										{% endfor %}  {% endcomment %}
+										
 
 										{% for x in elapsed_time %}
 											
@@ -159,7 +169,7 @@
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script>
-		function incrementProgressBars() {
+		{% comment %} function incrementProgressBars() {
             // Encuentra todas las barras de progreso
             let progress_bars = document.getElementsByClassName("progress-bar");
           
@@ -194,7 +204,7 @@
           }
           
           // Ejecuta la función incrementProgressBars
-          incrementProgressBars();
+          incrementProgressBars(); {% endcomment %}
 
 		
 	</script>

@@ -46,7 +46,7 @@
 							<button onclick = "statusChangeView('{{step.pk}}','Finished')" type="button" class="btn btn-w-m {% if step.process_status.description == 'Finished' %} btn-primary {% endif%} btn-block process{{step.pk}}">Finalizado</button>
 
 							<hr>
-							<label>Seleccionar tiempo</label>
+							<label>Selecciona fecha u hora de finalización:</label>
 							<div class="form-group">
 								<input onclick = "changeTime('{{step.pk}}',this)" type="radio" name="radio{{step.pk}}" id="radio1" value="date">
 									<label for="radio1">
@@ -95,7 +95,7 @@
 									<span >Actualizar el tiempo</span>
 									<br>
 									
-									<div id="setHour_{{step.pk}}">
+									{% comment %} <div id="setHour_{{step.pk}}">
 										{% for x in buttons %}
 											{% if x.id == step.pk %}
 												{% for y in x.range %}
@@ -103,7 +103,7 @@
 												{% endfor %}
 											{% endif %}
 										{% endfor %}
-									</div>
+									</div> {% endcomment %}
 								</div>											
 							</div>
 						</form>
