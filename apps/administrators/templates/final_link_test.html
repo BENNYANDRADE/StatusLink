@@ -67,21 +67,11 @@
 									{% endif %}
 
 									{% if step.process_status.description == 'InProcess' %}
-                                        {% if not step.calendar_date == None %}
-                                            Fecha de finalización: {{step.calendar_date}}
-                                            <div class="progress progress-striped active">
-                                                
-                                                <div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
-                                                    <span class="sr-only">40% Complete (success)</span>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-
-                                        
-
-										{% comment %} {% for x in progress_bar %}
-                                            
+										
+										{% for x in progress_bar %}
+											Fecha de finalización: {{step.calendar_date}}
 											<br>
+											
 											{% if x.id == step.pk %}
 												{% if x.percentage <= 100 %}
 													Progreso: {{x.percentage}}%
@@ -92,14 +82,13 @@
 											<br>
 											<br>
 											<div class="progress progress-striped active">
-                                                
 												<div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
 													<span class="sr-only">40% Complete (success)</span>
 												</div>
 											</div>
-											{% endif %} 
+											{% endif %}
 
-										{% endfor %}  {% endcomment %}
+										{% endfor %} 
 
 										{% for x in elapsed_time %}
 											
@@ -159,42 +148,11 @@
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script>
-		function incrementProgressBars() {
-            // Encuentra todas las barras de progreso
-            let progress_bars = document.getElementsByClassName("progress-bar");
-          
-            // Define la cantidad de incremento
-            let increment_amount = 10;
-          
-            // Define la cantidad de tiempo entre incrementos en milisegundos
-            let increment_interval = 1000;
-          
-            // Define una variable para mantener un registro de la cantidad de incrementos realizados
-            let increment_count = 0;
-          
-            // Crea un temporizador que incrementará el ancho de cada barra de progreso en increment_amount cada increment_interval milisegundos
-            let timer = setInterval(function() {
-              // Itera sobre todas las barras de progreso y aumenta su ancho
-              for (let i = 0; i < progress_bars.length; i++) {
-                let current_width = parseInt(progress_bars[i].style.width);
-                if (isNaN(current_width)) {
-                  current_width = 0;
-                }
-                progress_bars[i].style.width = (current_width + increment_amount) + "%";
-              }
-          
-              // Incrementa el contador de incrementos
-              increment_count++;
-          
-              // Si se han realizado suficientes incrementos, detiene el temporizador
-              if (increment_count >= (100 / increment_amount)) {
-                clearInterval(timer);
-              }
-            }, increment_interval);
-          }
-          
-          // Ejecuta la función incrementProgressBars
-          incrementProgressBars();
+		var x = setInterval(function() {
+			
+			console.log('{{elapsed_time}}');
+			console.log('{{elapsed_time}}');
+		}, 1000);
 
 		
 	</script>

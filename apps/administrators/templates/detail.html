@@ -72,9 +72,21 @@
 							</div>
 							<div class="form-group" id="clock{{step.pk}}" style="display:none;">
 								
+								
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									<input type="number" class="form-control" id="hourInput{{step.pk}}" value = "{{step.hours}}">
+								</div>
+								<div class="form-group">
+									<input type="radio" name="am_pm{{step.pk}}" id="radio1" value="AM">
+										<label for="radio1">
+											AM
+										</label>
+	
+									<input type="radio" name="am_pm{{step.pk}}" id="radio2" value="PM">
+									<label for="radio2">
+										PM
+									</label>
 								</div>
 								<br>
 								<div class="col-lg-12">
@@ -292,6 +304,17 @@
 	async function setHour(step){
 
 		let hourValue = parseInt(document.getElementById(`hourInput${step}`).value);
+		//let am_pm = document.getElementById(`am_pm${step}`).value;
+		//let am_pm = document.getElementsByTagName(`am_pm${step}`).value;
+		//let am_pm = document.querySelector(`input[name='am_pm${step}]:checked`).value;
+
+		// Obtener el elemento de radio button seleccionado
+		let selectedRadioButton = document.querySelector(`input[name='am_pm${step}']:checked`);
+
+		// Obtener el valor del radio button seleccionado
+		let selectedValue = selectedRadioButton ? selectedRadioButton.value : null;
+		
+		console.log('am_pm',selectedValue)
 		
 		if( hourValue > 24 ){
 			alert('¡Las horas no pueden exceder más de 24 horas!')
@@ -300,6 +323,11 @@
 		
 		if( isNaN(hourValue) ){
 			alert('¡debe colocar una hora!')
+			return false;
+		}
+
+		if( selectedValue == null) {
+			alert('¡Elija AM O PM!');
 			return false;
 		}
 		
@@ -314,7 +342,7 @@
 				'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
 				'X-CSRFToken': "{{csrf_token}}",
 			},
-			body: JSON.stringify({'hourValue':hourValue})
+			body: JSON.stringify({'hourValue':hourValue,'am_pm':selectedValue})
 		  })
 		  .then(response => response.json())
 		  .then(data => {

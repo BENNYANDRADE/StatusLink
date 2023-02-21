@@ -333,9 +333,13 @@ class SetHourView(View):
 		
 		data = json.load(request)
 		hour_value = data['hourValue']
+		am_pm = data['am_pm']
+		print("selected value",am_pm)
 		print('verificar pk',pk)
 		process_steps = ProcessSteps.objects.get(pk=pk)
+		process_steps.calendar_date = None
 		process_steps.hours = hour_value
+		process_steps.am_pm = am_pm
 		process_steps.register_date_time = datetime.today()
 		process_steps.save()
 		

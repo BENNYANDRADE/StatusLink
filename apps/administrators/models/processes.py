@@ -48,6 +48,7 @@ class ProcessSteps(models.Model):
 	register_date_time  = models.DateTimeField(db_column="RegisterDateTime",blank=True,null=True)
 	progress = models.IntegerField(default=0,blank=True,null=True)
 	hours = models.IntegerField(default=0,blank=True,null=True)
+	am_pm = models.TextField(db_column='AMPM',blank=True, null=True)
 	class Meta:
 		
 		db_table = 'ProcessSteps'
