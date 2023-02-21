@@ -25,7 +25,6 @@ DATABASES = {
 # DATABASES = {
 # 	'default' : dj_database_url.config( default=config('DATABASE_URL'),conn_max_age=600,ssl_require=False)
 # }
-
 # DATABASES['default']['ATOMIC_REQUESTS'] = True
 # DATABASES = {
 # 	'default': {
@@ -41,7 +40,7 @@ ALLOWED_HOSTS = [
 	# "apiinstance.onrender.com",
 	# "statuslink.onrender.com",
 	# "statuslink.onrender.com",
-    "statuslink-ft4r.onrender.com",
+	"statuslink-ft4r.onrender.com",
 	# "statuslink.onrender.com",
 	"localhost",
 	"0.0.0.0",

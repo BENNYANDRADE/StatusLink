@@ -50,7 +50,7 @@ class ProcessSteps(models.Model):
 	hours = models.IntegerField(default=0,blank=True,null=True)
 	am_pm = models.TextField(db_column='AMPM',blank=True, null=True)
 	class Meta:
-		
+			
 		db_table = 'ProcessSteps'
 	
 	def __str__(self):
