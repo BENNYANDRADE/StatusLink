@@ -46,7 +46,7 @@
 							<button onclick = "statusChangeView('{{step.pk}}','Finished')" type="button" class="btn btn-w-m {% if step.process_status.description == 'Finished' %} btn-primary {% endif%} btn-block process{{step.pk}}">Finalizado</button>
 
 							<hr>
-							<label>Selecciona fecha u hora de finalización:</label>
+							<label>Seleccione fecha u hora de finalización:</label>
 							<div class="form-group">
 								<input onclick = "changeTime('{{step.pk}}',this)" type="radio" name="radio{{step.pk}}" id="radio1" value="date">
 									<label for="radio1">
