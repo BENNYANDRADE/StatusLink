@@ -18,21 +18,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # =================DATABASE=================
 #REMOTE SERVER
-# DATABASES = {
-# 	'default' : dj_database_url.config( default=config('DATABASE_URL'),conn_max_age=600,ssl_require=True)
-# }
+DATABASES = {
+	'default' : dj_database_url.config( default=config('DATABASE_URL'),conn_max_age=600,ssl_require=True)
+}
 #LOCAL SERVER
 # DATABASES = {
 # 	'default' : dj_database_url.config( default=config('DATABASE_URL'),conn_max_age=600,ssl_require=False)
 # }
 
 # DATABASES['default']['ATOMIC_REQUESTS'] = True
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': 'StatusLink',
-	}
-}
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.sqlite3',
+# 		'NAME': 'StatusLink',
+# 	}
+# }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
