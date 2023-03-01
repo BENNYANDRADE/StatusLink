@@ -29,26 +29,11 @@
 	<div class="wrapper wrapper-content animated  fadeInDown">
 		{% block content %}
 		<div class="row">
-			<div class="col-lg-6">
+			<div class="col-lg-12">
 				<div class="jumbotron">
-                    <h2 class= "text-center">
-                        <b>{{company_info.company_name}}</b>
-                    </h2>
-                   
-                    
-                    
-											
-										
-                    {% if company_info.logo %}
-                    <div class="text-center">
-                        <img  src="{{company_info.logo.url}}" width="150"/>
-                    </div>
-                    {% endif %}
-                    
-					<h2>Instrucciones</h2>
-					<p>Aquí puedes ver tu proceso</p>
-
-                    
+					<h2 class= "text-center">
+						Este link ha expirado
+					</h2>
 					<hr>
 				</div>
 			</div>
@@ -73,28 +58,49 @@
 									{% endif %}
 
 									{% if step.process_status.description == 'InProcess' %}
-										
+
 										{% for x in progress_bar %}
-											Fecha de finalización: {{step.calendar_date}}
-											<br>
-											
-											{% if x.id == step.pk %}
-												{% if x.percentage <= 100 %}
-													Progreso: {{x.percentage}}%
-												{% else %}
-													Progreso: 100%
+											{% if not step.calendar_date == None %}
+												Fecha de finalización: {{step.calendar_date}}
+												<br>
+												{% if x.id == step.pk %}
+													{% if x.percentage <= 100 %}
+														Progreso: {{x.percentage}}%
+													{% else %}
+														Progreso: 100%
+													{% endif %}
+													<div class="progress progress-striped active">
+														
+														<div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
+															<span class="sr-only">40% Complete (success)</span>
+														</div>
+													</div>
 												{% endif %}
-												
-											<br>
-											<br>
-											<div class="progress progress-striped active">
-												<div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
-													<span class="sr-only">40% Complete (success)</span>
-												</div>
-											</div>
 											{% endif %}
 
-										{% endfor %} 
+												
+												{% comment %} {% if x.id == step.pk %}
+													{% if x.percentage <= 100 %}
+														Progreso: {{x.percentage}}%
+													{% else %}
+														Progreso: 100%
+													{% endif %}
+													
+												<br>
+												<br>
+												<div class="progress progress-striped active">
+													<div style="width: {{x.percentage}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar" class="progress-bar progress-bar-primary">
+														<span class="sr-only">40% Complete (success)</span>
+													</div>
+												</div>
+												{% endif %} {% endcomment %}
+
+											{% endfor %} 
+										
+
+										
+
+										
 
 										{% for x in elapsed_time %}
 											
@@ -120,30 +126,7 @@
 						</div>
 					</div>
 				</div>
-				{% endfor %}   
-				
-				<div class="panel panel-success">
-					<div class="panel-heading">
-						Comentarios y adjuntos
-					</div>
-					<div class="panel-body">
-						<p>{{link_info.comments}}</p>
-						<hr>
-						<p> 
-		
-							{% if link_info.attachment %}
-								<a href="{{link_info.attachment.url}}" class="badge badge-primary">Descargar Adjunto</a> 
-							{% else %} 
-								<span class="badge bg-gradient-light">
-									No existe adjunto 
-								</span> 
-							{% endif %} 
-						</p>
-		
-					</div>
-		
-				</div>
-			   
+				{% endfor %}
 			</div>
 		</div>
 		{% endblock %}
@@ -153,15 +136,7 @@
 	<!-- Mainly scripts -->
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script>
-		var x = setInterval(function() {
-			
-			console.log('{{elapsed_time}}');
-			console.log('{{elapsed_time}}');
-		}, 1000);
-
-		
-	</script>
+	
 	
 
 </body>

@@ -57,6 +57,12 @@
 										<button class="btn btn-primary" type="submit">
 											<strong>Guardar</strong>
 										</button>
+										{% comment %} <button class="btn btn-danger" type="submit">
+											<strong>Eliminar logo</strong>
+										</button> {% endcomment %}
+                                        
+                                        <a href="{% url  "administrators:delete_logo" %}" class="btn btn-danger">Eliminar Logo</a>
+
 									</div>								
 								</form>
 							</div>

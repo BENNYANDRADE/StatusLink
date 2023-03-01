@@ -15,6 +15,8 @@ from django.http import JsonResponse
 import json
 from datetime import datetime,timezone
 from datetime import timedelta
+from django.db.models import Count, Q
+
 
 
 from ..models import LinkInfo,ProcessSteps,ProcessStatus,Company
@@ -26,6 +28,12 @@ class AdminHomeView(TemplateView):
 		context['company_info'] = company_info
 		
 		return render(request, 'admin_home.html',context)
+	
+
+class NonExistView(TemplateView):
+	def get(self, request, **kwargs):
+		context = {}     
+		return render(request, 'non_exist.html',context)
 	
 
 class ConfigurationView(TemplateView):
@@ -59,9 +67,15 @@ class LinkGeneratorView(CreateView):
 	def post(self, request, **kwargs):     
 	
 		link_name = request.POST.get('link_name')
-		
+		expiration_date = request.POST.get('expiration_date')
+		# expiration_date = request.POST.get('expiration_date')
+		print('verificar expiration)date',expiration_date)
+		if expiration_date == "":
+			# print('intentando entrar')
+			expiration_date = None
 		link = LinkInfo()
 		link.link_name = link_name
+		link.expiration_date = expiration_date
 		link.save()
 
 		return HttpResponseRedirect(self.get_success_url(link.pk))
@@ -160,9 +174,15 @@ class OpenedLinksView(CreateView):
 		else:
 			context['link'] = self.verify_session()
 			del self.request.session['last_link']
-		opened_links = LinkInfo.objects.all().order_by('pk')
-		context['opened_links'] = opened_links
-		return render(request, 'opened_links.html',context)
+		finished_links = LinkInfo.objects.exclude(processsteps=None).annotate(num_finished=Count('processsteps', filter=Q(processsteps__process_status__description='Finished'))).filter(num_finished=Count('processsteps'))
+
+		open_links = LinkInfo.objects.exclude(pk__in=finished_links).distinct()
+		
+		
+		# open_links = LinkInfo.objects.filter()
+
+		context['open_links'] = open_links
+		return render(request, 'open_links.html',context)
 
 	def verify_session(self):	
 		if 'last_link' in self.request.session:
@@ -171,9 +191,35 @@ class OpenedLinksView(CreateView):
 			return None
 
 
+class HistoryLinksView(CreateView):
+	def get(self, request, **kwargs):
+		context={}
+		# opened_links = LinkInfo.objects.all().order_by('pk')
+		# finished_links=LinkInfo.objects.filter(processsteps__process_status__description="Finished")
+		# finished_links = LinkInfo.objects.annotate(num_finished=Count('processsteps', filter=Q(processsteps__process_status__description='Finished'))).filter(num_finished=Count('processsteps'))
+		finished_links = LinkInfo.objects.exclude(processsteps=None).annotate(num_finished=Count('processsteps', filter=Q(processsteps__process_status__description='Finished'))).filter(num_finished=Count('processsteps'))
+		
+		context['finished_links'] = finished_links
+		return render(request, 'history.html',context)
+
+
+
 class LinksDeleteView(DeleteView):
 	model = LinkInfo
 	success_url = reverse_lazy("administrators:opened_links")
+	
+class LinksDeleteLogoView(View):
+
+	def get(self, request, **kwargs):
+		company = Company.objects.last()
+		company.logo = None
+		company.save()
+
+		return HttpResponseRedirect(self.get_success_url())
+
+	def get_success_url(self):
+			# return reverse('teachers:planifications_list', )
+		return reverse("administrators:configuration_view")		# return render(request, 'opened_links.html',context)
 
 
 class CancelView(View):
@@ -263,8 +309,12 @@ class FinalLinkView(View):
 		# if processes
 		try:
 			link_info=LinkInfo.objects.get(pk=pk)
+			# link_info.expiration_date + timedelta(days=1)
+			if link_info.expiration_date == datetime.now().date():
+				return HttpResponseRedirect(self.get_success_url())	
 		except LinkInfo.DoesNotExist:
 			link_info = None
+				
 		context['steps'] = processes
 		# context['range_hours'] = range(1,hours)
 		context['link_info'] = link_info
@@ -273,6 +323,8 @@ class FinalLinkView(View):
 		context['company_info'] = company
 		return render(request, 'final_link.html',context)
 
+	def get_success_url(self):
+		return reverse("administrators:non_exist")
 
 class StatusChangeView(View):
 	# context_object_name = 'calendar_homeworks_list'

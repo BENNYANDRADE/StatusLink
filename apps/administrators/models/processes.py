@@ -12,6 +12,7 @@ class LinkInfo(models.Model):
 	generated_link = models.CharField(db_column='GeneratedLink', max_length=20,blank=True, null=True)
 	comments = models.TextField(db_column='Comment',blank=True, null=True)
 	attachment = models.FileField(db_column='Attachment', upload_to = file_path, blank=True, null=True)
+	expiration_date = models.DateField(db_column='ExpirationDate', blank=True,null=True)
 
 	class Meta:
 		

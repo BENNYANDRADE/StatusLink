@@ -35,9 +35,12 @@
                         <b>{{company_info.company_name}}</b>
                     </h2>
                    
-                    <div class="text-center">
-                        <img  src="{{company_info.logo.url}}" width="150"/>
-                    </div>
+
+                    {% if company_info.logo %}
+                        <div class="text-center">
+                            <img  src="{{company_info.logo.url}}" width="150"/>
+                        </div>
+                    {% endif %}
                     
 					<h2>Instrucciones</h2>
 					<p>Aquí puedes ver tu proceso</p>
@@ -48,6 +51,11 @@
 			</div>
 			<div class="col-lg-6">
 				<h2><b>{{link_info.link_name}}<b></h2>
+
+                    {% if link_info.expiration_date %}
+                        <h3><b>Fecha de Expiración: {{link_info.expiration_date|date:"d-m-Y"}}<b></h3>
+                    {% endif %}
+				
 				{% for step in steps %}
 
 				<div class="ibox float-e-margins">

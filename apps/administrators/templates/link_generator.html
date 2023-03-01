@@ -3,7 +3,7 @@
 
 {% block css %}
 <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
-
+<link href="{% static 'css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -30,6 +30,8 @@
 						{% comment %} <p>Sign in today for more expirience.</p> {% endcomment %}
 						<form role="form" method="post">
 							{% csrf_token %}
+							{% comment %} <input type="hidden" name="expiration_date" value=""> {% endcomment %}
+
 							<div class="form-group">
 								<label>Nombre del link</label> 
 								<input name="link_name" type="text" placeholder="" class="form-control" required>
@@ -43,9 +45,22 @@
 							</div>
 							<hr>
 							<div class="form-group">
-								<div class="i-checks"><label> <input type="checkbox" value="option1" name="a"> <i></i> Este link tiene fecha de expiración </label></div>
+								<div  class="i-checks">
+									<label> 
+										<input onclick = "showExpirationDate()" type="checkbox"> 
+										<i>
 
+										</i> Este link tiene fecha de expiración 
+									</label>
+								</div>
 							</div>
+							<div class="form-group" id="expirationDateContainer" style="display:none">
+								<div class="input-group date">
+									<span class="input-group-addon" style=""><i class="fa fa-calendar"></i></span>
+									<input type="hidden" class="form-control" id="expiration_date" name="expiration_date" value="">
+								</div>
+							</div>
+							<br>
 							<div>
 								<button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
 									<strong>Siguiente paso</strong>
@@ -66,6 +81,7 @@
 {% endblock %}
 
 {% block javascript %}
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
 
 <script>
 	$("#example").steps({
@@ -73,6 +89,36 @@
 		bodyTag: "section",
 		transitionEffect: "slideLeft",
 		autoFocus: true
+	});    
+
+	$(document).ready(function(){
+
+		$('.input-group.date').datepicker({
+			format: 'yyyy-mm-dd',
+			todayBtn: "linked",
+			keyboardNavigation: false,
+			forceParse: false,
+			calendarWeeks: true,
+			autoclose: true,
+		   
+		});
+
 	});
+
+	function showExpirationDate(){
+
+		let element=document.getElementById("expirationDateContainer")
+		let ed=document.getElementById("expiration_date")
+		if (element.style.display == "none"){
+			element.style.display="inline"
+			ed.type="text";
+		}else{
+			element.style.display="none";
+			ed.type="hidden";
+		}
+			
+		
+
+	}
 </script>
 {% endblock %}
